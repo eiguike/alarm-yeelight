@@ -12,15 +12,17 @@ int main() {
 
   YEELIGHT_LAMP * lamps = yeelight_get_lamps();
 
-  lamps->power = 0;
-  lamps->set_power(lamps);
-  sleep(2);
+  int index = 0;
 
-  lamps->power = 1;
-  lamps->set_power(lamps);
-  sleep(2);
+  for (;index < 150; index++) {
+    lamps->power = 0;
+    lamps->set_power(lamps);
+    sleep(1);
 
-  lamps->dispose(&lamps);
+    lamps->power = 1;
+    lamps->set_power(lamps);
+    sleep(1);
+  }
 
   return 0;
 }
