@@ -7,7 +7,7 @@ typedef struct _YEELIGHT_LAMP {
   char * ext;
   char * location;
   char * server;
-  unsigned long long int id;
+  unsigned int id;
   char * model;
   char * firmware_version;
   char * features_supported;

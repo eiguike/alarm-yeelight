@@ -77,8 +77,8 @@ char * yeelight_udp_get_lamps() {
 
 void yeelight_udp_set_lamp(YEELIGHT_LAMP * this) { 
   DEBUG("Begin");
-  int sockfd, connfd;
-  struct sockaddr_in servaddr, cli;
+  int sockfd;
+  struct sockaddr_in servaddr;
 
   // socket create and varification
   sockfd = socket(AF_INET, SOCK_STREAM, 0);

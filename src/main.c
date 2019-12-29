@@ -14,7 +14,7 @@ int main() {
 
   int index = 0;
 
-  for (;index < 150; index++) {
+  for (;index < 1; index++) {
     lamps->power = 0;
     lamps->set_power(lamps);
     sleep(1);
@@ -23,6 +23,9 @@ int main() {
     lamps->set_power(lamps);
     sleep(1);
   }
+
+  lamps->dispose(&lamps);
+  gLogger->Dispose(gLogger);
 
   return 0;
 }

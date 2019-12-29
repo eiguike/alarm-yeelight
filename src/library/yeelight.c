@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "yeelight.h"
-#include "../library/yeelight_internal_headers.h"
+#include "../library/yeelight_internals.h"
 #include "logger.h"
 
 void yeelight_lamp_dispose(YEELIGHT_LAMP ** this) {
@@ -26,8 +26,6 @@ YEELIGHT_LAMP * yeelight_lamp_new() {
 YEELIGHT_LAMP * yeelight_get_lamps() {
   char * buffer = yeelight_udp_get_lamps();
   char * p_buffer = NULL;
-
-  int buffer_size = strlen(buffer);
 
   YEELIGHT_LAMP * lamp = yeelight_lamp_new();
   
