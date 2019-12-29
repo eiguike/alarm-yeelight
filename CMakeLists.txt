@@ -11,9 +11,6 @@ include_directories("./src/include")
 set(SOURCE_FILES src/main.c)
 add_executable(alarm_xaiomi ${SOURCE_FILES})
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/config
-      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
 target_link_libraries(Yeelight Logger)
 target_link_libraries(ClientUDP Logger)
 
