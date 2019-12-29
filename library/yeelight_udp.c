@@ -6,14 +6,21 @@
 #include <sys/socket.h> 
 #include <arpa/inet.h> 
 #include <netinet/in.h> 
+#include "yeelight.h"
+#include "logger.h"
 
-#define MAXLINE 1024 
-#define FIXED_LOCAL_ADDRESS "192.168.64.234"
+#define FIXED_LOCAL_ADDRESS "192.168.0.1"
+#define SEARCH_PROTOCOL "M-SEARCH * HTTP/1.1\r\nMAN: \"ssdp:discover\"\r\nST: wifi_bulb\r\n"
+#define TURN_LAMP "{\"id\": %d, \"method\": \"set_power\", \"params\": [\"%s\"]}\r\n"
 
-char *hello = "M-SEARCH * HTTP/1.1\r\nMAN: \"ssdp:discover\"\r\nST: wifi_bulb\r\n"; 
-char *hello2 = "{\"id\": 134278708, \"method\": \"set_power\", \"params\": [\"on\"]}\r\n";
+const char * turn_lamp_func(int i) {
+  if (i){
+    return "on";
+  }
+  return "off";
+}
 
-char * yeelight_udp_get_lamp() { 
+char * yeelight_udp_get_lamps() { 
   struct in_addr localInterface;
   struct sockaddr_in groupSock;
   struct sockaddr_in localSock;
@@ -55,7 +62,7 @@ char * yeelight_udp_get_lamp() {
 
   setsockopt(udpSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char *)&group, sizeof(group));
 
-  sendto(udpSocket, hello, 68, 0, (struct sockaddr*)&groupSock, sizeof(groupSock));
+  sendto(udpSocket, SEARCH_PROTOCOL, 68, 0, (struct sockaddr*)&groupSock, sizeof(groupSock));
 
   struct sockaddr_in si_other;
   socklen_t slen = sizeof(si_other);
@@ -66,7 +73,7 @@ char * yeelight_udp_get_lamp() {
   return buffer;
 }
 
-void yeelight_udp_set_lamp() { 
+void yeelight_udp_set_lamp(YEELIGHT_LAMP * this) { 
   int sockfd, connfd;
   struct sockaddr_in servaddr, cli;
 
@@ -74,28 +81,36 @@ void yeelight_udp_set_lamp() {
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
   if (sockfd == -1) {
     printf("socket creation failed...\n");
-    exit(0);
+    return;
   }
   else
     printf("Socket successfully created..\n");
+
   bzero(&servaddr, sizeof(servaddr));
 
   // assign IP, PORT
   servaddr.sin_family = AF_INET;
-  servaddr.sin_addr.s_addr = inet_addr("192.168.64.136");
+  servaddr.sin_addr.s_addr = inet_addr(this->location);
   servaddr.sin_port = htons(55443);
 
   // connect the client socket to server socket
   if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) != 0) {
     printf("connection with the server failed...\n");
-    exit(0);
   }
-  else
+  else {
     printf("connected to the server..\n");
 
-  printf("sizeof(hello2) %d\n", sizeof(*hello2));
-  printf("%s\n", hello2);
-  write(sockfd, hello2, 62);
+    DEBUG("this->id %d", this->id);
+    DEBUG("this->location %s", this->location);
+    DEBUG("this->power %s", turn_lamp_func(this->power));
 
-  close(sockfd);
+    char buffer[1024] = { 0 };
+    sprintf(buffer, TURN_LAMP, this->id, turn_lamp_func(this->power));
+
+    DEBUG(buffer);
+
+    write(sockfd, buffer, 62);
+
+    close(sockfd);
+  }
 } 

@@ -1,38 +1,45 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "yeelight.h"
 #include "../library/yeelight_internal_headers.h"
+#include "logger.h"
 
-void not_implemented() {
-  printf("Not implemented.\n");
-}
-
-void yeelight_set_lamp(YEELIGHT_DETECTOR * this, YEELIGHT_INFORMATION * lamp) {
-  yeelight_udp_set_lamp();
-}
-
-YEELIGHT_INFORMATION ** yeelight_get_lamp(YEELIGHT_DETECTOR * this) {
-  char * pointer = yeelight_udp_get_lamp();
-  printf("%s\n", pointer);
-
-  free(pointer);
-  return NULL;
-}
-
-YEELIGHT_DETECTOR * yeelight_new() {
-  YEELIGHT_DETECTOR * p_yeelight = NULL;
-
-  p_yeelight = calloc(1, sizeof(YEELIGHT_DETECTOR));
-
-  if (p_yeelight == NULL) {
-    printf("Something is not cool...\n");
-    exit(1);
+void yeelight_lamp_dispose(YEELIGHT_LAMP ** this) {
+  if (*this != NULL) {
+    free(*this);
   }
+  *this = NULL;
+}
 
-  p_yeelight->get_lamp = yeelight_get_lamp;
-  p_yeelight->set_lamp = yeelight_set_lamp;
-  p_yeelight->dispose = not_implemented;
+YEELIGHT_LAMP * yeelight_lamp_new() {
+  YEELIGHT_LAMP * lamp = calloc(1, sizeof(YEELIGHT_LAMP));
 
-  return p_yeelight;
+  lamp->set_power = yeelight_udp_set_lamp;
+
+  lamp->dispose = yeelight_lamp_dispose;
+
+  return lamp;
+}
+
+YEELIGHT_LAMP * yeelight_get_lamps() {
+  char * buffer = yeelight_udp_get_lamps();
+  char * p_buffer = NULL;
+
+  int buffer_size = strlen(buffer);
+
+  YEELIGHT_LAMP * lamp = yeelight_lamp_new();
+  
+  char ip[1024] = { 0 };
+
+  p_buffer = strstr(buffer, "id: ");
+  sscanf(p_buffer, "id: %x\r\n", &(lamp->id));
+  p_buffer = strstr(buffer, "Location: ");
+  sscanf(p_buffer, "Location: yeelight://%[^:]s:55443\r\n", ip);
+
+  lamp->location = calloc(strlen(ip), sizeof(char));
+  strcpy(lamp->location, ip);
+
+  return lamp;
 }

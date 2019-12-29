@@ -1,17 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "yeelight.h"
+#include <unistd.h>
 
-//int lokura_connect();
+#include "yeelight.h"
+#include "logger.h"
+
+LOGGER * gLogger = NULL;
 
 int main() {
-  printf("Hello world!\n");
+  gLogger = Logger_New(STDOUT);
 
-  YEELIGHT_DETECTOR * yeelight = yeelight_new();
-  YEELIGHT_INFORMATION ** lamps = yeelight->get_lamp(yeelight);
+  YEELIGHT_LAMP * lamps = yeelight_get_lamps();
 
-  yeelight->set_lamp(yeelight, NULL);
-  yeelight->dispose(&yeelight);
+  lamps->power = 0;
+  lamps->set_power(lamps);
+  sleep(2);
+
+  lamps->power = 1;
+  lamps->set_power(lamps);
+  sleep(2);
+
+  lamps->dispose(&lamps);
 
   return 0;
 }
