@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.0)
 
 project(alarm_xaiomi C)
 
-add_library(ClientUDP STATIC src/library/yeelight_udp.c)
-add_library(Yeelight STATIC src/library/yeelight.c)
+add_library(ClientUDP STATIC src/library/yeelight_integration.c)
+add_library(Yeelight STATIC src/library/yeelight_lamp.c)
 add_library(Logger STATIC src/vendors/logger-c/library/logger.c)
 
 include_directories("./src/include")
