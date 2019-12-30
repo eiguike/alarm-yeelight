@@ -8,7 +8,7 @@
 LOGGER * gLogger = NULL;
 
 int main() {
-  gLogger = Logger_New(STDOUT);
+  gLogger = Logger_New(STDOUT, ALL_MESSAGES);
 
   YEELIGHT_LAMP * lamps = yeelight_get_lamps();
 

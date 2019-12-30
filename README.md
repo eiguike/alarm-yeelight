@@ -11,7 +11,9 @@ this application is suppose to be used within your openwrt's router, but it is p
 4. make package/alarm-xaiomi/compile
 
 ### instructions to build without openwrt 
-1. access src folder
+1. clone this repository
+2. git submodule init && git submodule update
+3. access src folder
 2. make
 3. execute ./alarm-xaiomi
 
