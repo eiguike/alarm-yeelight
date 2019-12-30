@@ -23,6 +23,8 @@ int main() {
     goto FINISH;
   }
 
+  char buffer[1024] = { 0 };
+
   for (;index < 150; index++) {
     lamps->send_command(lamps, "set_power", "off", NULL);
     sleep(1);

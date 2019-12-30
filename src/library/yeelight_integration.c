@@ -10,7 +10,7 @@
 #include "yeelight.h"
 #include "logger.h"
 
-#define FIXED_LOCAL_ADDRESS "192.168.64.234"
+#define FIXED_LOCAL_ADDRESS "192.168.64.233"
 #define SEARCH_PROTOCOL "M-SEARCH * HTTP/1.1\r\nMAN: \"ssdp:discover\"\r\nST: wifi_bulb\r\n"
 #define TURN_LAMP_ON "{\"id\": %d, \"method\": \"set_power\", \"params\": [\"on\"]}\r\n"
 #define TURN_LAMP_OFF "{\"id\": %d, \"method\": \"set_power\", \"params\": [\"off\"]}\r\n"

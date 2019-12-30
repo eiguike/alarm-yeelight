@@ -64,8 +64,12 @@ static inline char * extract_parameters(va_list args){
 
     if (pointer == NULL) break;
 
-    size = strlen(buffer); 
-    sprintf(buffer + size, "\"%s\", ", pointer);
+    size = strlen(buffer);
+    if (atoi(pointer) != 0 || (strlen(pointer) == 1)) {
+      sprintf(buffer + size, "%s, ", pointer);
+    } else {
+      sprintf(buffer + size, "\"%s\", ", pointer);
+    }
   }
 
   size = strlen(buffer);

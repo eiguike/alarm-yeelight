@@ -12,10 +12,11 @@ this application is suppose to be used within your openwrt's router, but it is p
 
 ### instructions to build without openwrt 
 1. clone this repository
-2. git submodule init && git submodule update
-3. access src folder
-2. make
-3. execute ./alarm-xaiomi
+2. edit FIXED_LOCAL_ADDRESS definition to your local address
+3. git submodule init && git submodule update
+4. access src folder
+5. make
+6. execute ./alarm-xaiomi
 
 ### references:
 - [Yeelight Inter Operation Specs](https://www.yeelight.com/download/Yeelight_Inter-Operation_Spec.pdf)
