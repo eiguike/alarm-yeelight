@@ -4,9 +4,10 @@ project(alarm_xaiomi C)
 
 add_library(ClientUDP STATIC src/library/yeelight_udp.c)
 add_library(Yeelight STATIC src/library/yeelight.c)
-add_library(Logger STATIC src/library/logger.c)
+add_library(Logger STATIC src/vendors/logger-c/library/logger.c)
 
 include_directories("./src/include")
+include_directories("./src/vendors/logger-c/include")
 
 set(SOURCE_FILES src/main.c)
 add_executable(alarm_xaiomi ${SOURCE_FILES})
