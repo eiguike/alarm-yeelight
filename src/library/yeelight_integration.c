@@ -4,15 +4,17 @@
 #include <string.h> 
 #include <sys/types.h> 
 #include <sys/socket.h> 
+#include <sys/time.h>
 #include <arpa/inet.h> 
 #include <netinet/in.h> 
 #include "yeelight.h"
 #include "logger.h"
 
-#define FIXED_LOCAL_ADDRESS "192.168.64.1"
+#define FIXED_LOCAL_ADDRESS "192.168.64.234"
 #define SEARCH_PROTOCOL "M-SEARCH * HTTP/1.1\r\nMAN: \"ssdp:discover\"\r\nST: wifi_bulb\r\n"
 #define TURN_LAMP_ON "{\"id\": %d, \"method\": \"set_power\", \"params\": [\"on\"]}\r\n"
 #define TURN_LAMP_OFF "{\"id\": %d, \"method\": \"set_power\", \"params\": [\"off\"]}\r\n"
+#define COMMAND "{\"id\": %d, \"method\": \"%s\", \"params\": [\"%s\"]}\r\n"
 
 char * yeelight_udp_get_lamps() { 
   DEBUG("Begin");
@@ -68,35 +70,33 @@ char * yeelight_udp_get_lamps() {
   socklen_t slen = sizeof(si_other);
   char * buffer = calloc(1024, sizeof(char));
 
+  // timeout
+  struct timeval tv;
+  tv.tv_sec = 5;
+  tv.tv_usec = 0;
+  setsockopt(udpSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
+
   recvfrom(udpSocket, buffer, 1024, 0, (struct sockaddr *) &si_other, &slen);
-  DEBUG("received message!");
+  DEBUG("response-----------\n %s", buffer);
 
   DEBUG("Finish");
   return buffer;
 }
 
 void yeelight_udp_set_lamp(YEELIGHT_LAMP * this) { 
-  DEBUG("Begin");
   int sockfd;
   struct sockaddr_in servaddr;
+  char buffer[1024] = { 0 };
 
-  // socket create and varification
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
-  if (sockfd == -1) {
-    printf("socket creation failed...\n");
-    return;
-  }
-  else
-    printf("Socket successfully created..\n");
+  if (sockfd == -1) { ERROR("Socket creation failed..."); return; }
 
   bzero(&servaddr, sizeof(servaddr));
 
-  // assign IP, PORT
   servaddr.sin_family = AF_INET;
   servaddr.sin_addr.s_addr = inet_addr(this->location);
   servaddr.sin_port = htons(55443);
 
-  // connect the client socket to server socket
   if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) != 0) {
     printf("connection with the server failed...\n");
   }
@@ -105,8 +105,6 @@ void yeelight_udp_set_lamp(YEELIGHT_LAMP * this) {
 
     DEBUG("this->id %d", this->id);
     DEBUG("this->location %s", this->location);
-
-    char buffer[1024] = { 0 };
     
     if (this->power) {
       sprintf(buffer, TURN_LAMP_ON, this->id);
@@ -121,4 +119,31 @@ void yeelight_udp_set_lamp(YEELIGHT_LAMP * this) {
     close(sockfd);
   }
   DEBUG("Finish");
-} 
+}
+
+void yeelight_udp_send_command(YEELIGHT_LAMP * this, const char * command) { 
+  int sockfd = 0;
+  struct sockaddr_in servaddr = { 0 };
+  char buffer[1024] = { 0 };
+
+  if (command == NULL) { ERROR("Command is NULL!"); return; }
+
+  sockfd = socket(AF_INET, SOCK_STREAM, 0);
+  if (sockfd == -1) { ERROR("Socket creation failed..."); return; }
+
+  servaddr.sin_family = AF_INET;
+  servaddr.sin_addr.s_addr = inet_addr(this->location);
+  servaddr.sin_port = htons(55443);
+
+  if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) != 0) {
+    ERROR("Connection with the server failed");
+  } else {
+    INFO("Sending command %s", command);
+    send(sockfd, command, strlen(command), 0);
+    read(sockfd, buffer, 1024);
+    INFO("Response %s", buffer);
+  }
+  close(sockfd);
+
+  DEBUG("Finish");
+}

@@ -8,23 +8,31 @@
 LOGGER * gLogger = NULL;
 
 int main() {
-  gLogger = Logger_New(STDOUT, ALL_MESSAGES);
-
-  YEELIGHT_LAMP * lamps = yeelight_get_lamps();
-
   int index = 0;
+  YEELIGHT_LAMP * lamps = NULL;
 
-  for (;index < 1; index++) {
-    lamps->power = 0;
-    lamps->set_power(lamps);
-    sleep(1);
+  gLogger = Logger_New(STDOUT, INFOS_AND_ERRORS);
 
-    lamps->power = 1;
-    lamps->set_power(lamps);
-    sleep(1);
+  for(index = 0; lamps == NULL && index < 3; index++) {
+    INFO("Trying to find for new lamps");
+    lamps = yeelight_get_lamps();
   }
 
+  if (lamps == NULL) {
+    ERROR("Failed to connect to Yeelight lamp");
+    goto FINISH;
+  }
+
+  for (;index < 150; index++) {
+    lamps->send_command(lamps, "set_power", "off", NULL);
+    sleep(1);
+
+    lamps->send_command(lamps, "set_power", "on", NULL);
+    sleep(1);
+  }
   lamps->dispose(&lamps);
+
+FINISH:
   gLogger->Dispose(gLogger);
 
   return 0;
