@@ -1,6 +1,6 @@
 ## alarm-yeelight
 one of my goals for 2020 is to wake up more earlier than 2019 and this my initial efforts to do that (and hopefully successfully).
-it will work just turning on and off the yeelight's lamp or yeelight's lamp. that's it!
+it will work just turning on and off the yeelight's lamp. that's it!
 
 this application is suppose to be used within your openwrt's router, but it is possible to extract the application and use in your computer.
 
