@@ -1,6 +1,6 @@
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=alarm-xaiomi
+PKG_NAME:=alarm-yeelight
 PKG_VERSION:=0.1
 PKG_RELEASE:=1
 
@@ -12,7 +12,7 @@ PKG_LICENSE:=CC0-1.0
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/alarm-xaiomi
+define Package/alarm-yeelight
 	SECTION:=net
 	# Select package by default
 	#DEFAULT:=y
@@ -24,8 +24,8 @@ define Package/alarm-xaiomi
 	SUBMENU:=VPN
 endef
 
-define Package/alarm-xaiomi/description
-	Some example Programm called alarm-xaiomi
+define Package/alarm-yeelight/description
+	Some example Programm called alarm-yeelight
 endef
 
 define Build/Prepare
@@ -42,9 +42,9 @@ define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) $(TARGET_CONFIGURE_OPTS)
 endef
 
-define Package/alarm-xaiomi/install
+define Package/alarm-yeelight/install
 	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/alarm-xaiomi $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/alarm-yeelight $(1)/usr/sbin/
 endef
 
-$(eval $(call BuildPackage,alarm-xaiomi))
+$(eval $(call BuildPackage,alarm-yeelight))

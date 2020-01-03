@@ -10,7 +10,7 @@ all:
 	$(CC) -c -o logger.o vendors/logger-c/library/logger.c -Wall $(LDFLAGS) $(CFLAGS)
 	$(CC) -c -o yeelight_lamp.o library/yeelight_lamp.c -Wall $(LDFLAGS) $(CFLAGS)
 	$(CC) -c -o yeelight_integration.o library/yeelight_integration.c -Wall $(LDFLAGS) $(CFLAGS)
-	$(CC) -o alarm-xaiomi main.o logger.o yeelight_lamp.o yeelight_integration.o $(CFLAGS)
+	$(CC) -o alarm-yeelight main.o logger.o yeelight_lamp.o yeelight_integration.o $(CFLAGS)
 
 clean:
-	rm *.o alarm-xaiomi
+	rm *.o alarm-yeelight
