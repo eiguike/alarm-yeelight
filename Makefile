@@ -13,15 +13,10 @@ PKG_LICENSE:=CC0-1.0
 include $(INCLUDE_DIR)/package.mk
 
 define Package/alarm-yeelight
-	SECTION:=net
-	# Select package by default
-	#DEFAULT:=y
-	CATEGORY:=Network
-	TITLE:=HUEHUEUEHUEH.
-	# Feature FOO also needs libsodium:
-	DEPENDS:=+librt +CONFIG_EXAMPLE2_ENABLE_FOO:libsodium
-	URL:=https://www.example.com
-	SUBMENU:=VPN
+	SECTION:=utilities
+	CATEGORY:=Utilities
+	TITLE:=alarm-yeelight
+	URL:=https://www.github.com/eiguike/alarm-yeelight
 endef
 
 define Package/alarm-yeelight/description
