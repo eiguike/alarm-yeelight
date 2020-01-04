@@ -12,9 +12,6 @@
 
 #define FIXED_LOCAL_ADDRESS "192.168.64.233"
 #define SEARCH_PROTOCOL "M-SEARCH * HTTP/1.1\r\nMAN: \"ssdp:discover\"\r\nST: wifi_bulb\r\n"
-#define TURN_LAMP_ON "{\"id\": %d, \"method\": \"set_power\", \"params\": [\"on\"]}\r\n"
-#define TURN_LAMP_OFF "{\"id\": %d, \"method\": \"set_power\", \"params\": [\"off\"]}\r\n"
-#define COMMAND "{\"id\": %d, \"method\": \"%s\", \"params\": [\"%s\"]}\r\n"
 
 char * yeelight_udp_get_lamps() { 
   DEBUG("Begin");
@@ -83,44 +80,6 @@ char * yeelight_udp_get_lamps() {
   return buffer;
 }
 
-void yeelight_udp_set_lamp(YEELIGHT_LAMP * this) { 
-  int sockfd;
-  struct sockaddr_in servaddr;
-  char buffer[1024] = { 0 };
-
-  sockfd = socket(AF_INET, SOCK_STREAM, 0);
-  if (sockfd == -1) { ERROR("Socket creation failed..."); return; }
-
-  bzero(&servaddr, sizeof(servaddr));
-
-  servaddr.sin_family = AF_INET;
-  servaddr.sin_addr.s_addr = inet_addr(this->location);
-  servaddr.sin_port = htons(55443);
-
-  if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) != 0) {
-    printf("connection with the server failed...\n");
-  }
-  else {
-    printf("connected to the server..\n");
-
-    DEBUG("this->id %d", this->id);
-    DEBUG("this->location %s", this->location);
-    
-    if (this->power) {
-      sprintf(buffer, TURN_LAMP_ON, this->id);
-    } else {
-      sprintf(buffer, TURN_LAMP_OFF, this->id);
-    }
-
-    DEBUG(buffer);
-
-    write(sockfd, buffer, 62);
-
-    close(sockfd);
-  }
-  DEBUG("Finish");
-}
-
 void yeelight_udp_send_command(YEELIGHT_LAMP * this, const char * command) { 
   int sockfd = 0;
   struct sockaddr_in servaddr = { 0 };
@@ -129,6 +88,7 @@ void yeelight_udp_send_command(YEELIGHT_LAMP * this, const char * command) {
   if (command == NULL) { ERROR("Command is NULL!"); return; }
 
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
+
   if (sockfd == -1) { ERROR("Socket creation failed..."); return; }
 
   servaddr.sin_family = AF_INET;
@@ -144,6 +104,4 @@ void yeelight_udp_send_command(YEELIGHT_LAMP * this, const char * command) {
     INFO("Response %s", buffer);
   }
   close(sockfd);
-
-  DEBUG("Finish");
 }

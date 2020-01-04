@@ -21,7 +21,6 @@ typedef struct _YEELIGHT_LAMP {
   char * name;
 
   void (*send_command) (struct _YEELIGHT_LAMP * this, const char * command, ...); 
-  void (*set_power) (struct _YEELIGHT_LAMP * this);
   void (*dispose) (struct _YEELIGHT_LAMP ** this);
 } YEELIGHT_LAMP;
 
