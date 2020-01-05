@@ -27,7 +27,7 @@ void yeelight_lamp_dispose(YEELIGHT_LAMP ** this) {
 
 YEELIGHT_LAMP * yeelight_get_lamps() {
   char * p_buffer = NULL;
-  char * buffer = yeelight_udp_get_lamps();
+  char * buffer = yeelight_integration_get_lamps();
   YEELIGHT_LAMP * lamp = NULL;
 
   if (strlen(buffer) == 0) {
@@ -64,7 +64,7 @@ void yeelight_send_command(YEELIGHT_LAMP * this, const char * command, ...) {
 
   sprintf(buffer, YEELIGHT_COMMAND_FORMAT, this->id, command, variables);
 
-  yeelight_udp_send_command(this, buffer);
+  yeelight_integration_send_command(this, buffer);
 
   free(variables);
 }
@@ -88,7 +88,9 @@ static inline char * extract_parameters(va_list args){
   }
 
   size = strlen(buffer);
-  buffer[size - 2] = '\0';
+  if (size > 0) {
+    buffer[size - 2] = '\0';
+  }
 
   return buffer;
 }

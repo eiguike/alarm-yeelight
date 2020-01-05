@@ -1,6 +1,6 @@
 // yeelight_integration.c
-char * yeelight_udp_get_lamps();
-void yeelight_udp_send_command(YEELIGHT_LAMP * this, const char * command);
+char * yeelight_integration_get_lamps();
+void yeelight_integration_send_command(YEELIGHT_LAMP * this, const char * command);
 
 // yeelight_lamp.c
 void yeelight_send_command(YEELIGHT_LAMP * this, const char * command, ...);

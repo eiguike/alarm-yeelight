@@ -13,7 +13,7 @@
 #define FIXED_LOCAL_ADDRESS "192.168.64.233"
 #define SEARCH_PROTOCOL "M-SEARCH * HTTP/1.1\r\nMAN: \"ssdp:discover\"\r\nST: wifi_bulb\r\n"
 
-char * yeelight_udp_get_lamps() { 
+char * yeelight_integration_get_lamps() { 
   DEBUG("Begin");
   struct in_addr localInterface;
   struct sockaddr_in groupSock;
@@ -80,7 +80,7 @@ char * yeelight_udp_get_lamps() {
   return buffer;
 }
 
-void yeelight_udp_send_command(YEELIGHT_LAMP * this, const char * command) { 
+void yeelight_integration_send_command(YEELIGHT_LAMP * this, const char * command) { 
   int sockfd = 0;
   struct sockaddr_in servaddr = { 0 };
   char buffer[1024] = { 0 };
