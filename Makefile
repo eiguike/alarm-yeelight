@@ -7,8 +7,7 @@ PKG_RELEASE:=1
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 
-PKG_MAINTAINER:=John Doe <john.doe@example.com>
-PKG_LICENSE:=CC0-1.0
+PKG_MAINTAINER:=Henrique Eihara<rick.eihara@gmail.com>
 
 include $(INCLUDE_DIR)/package.mk
 
