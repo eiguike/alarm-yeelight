@@ -1,4 +1,4 @@
-## alarm-yeelight
+## alarm-yeelight [![CircleCI](https://circleci.com/gh/eiguike/alarm-yeelight.svg?style=svg)](https://circleci.com/gh/eiguike/alarm-yeelight)
 one of my goals for 2020 is to wake up more earlier than 2019 and this my initial efforts to do that (and hopefully successfully).
 it will work just turning on and off the yeelight's lamp. that's it!
 
